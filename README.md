@@ -71,3 +71,86 @@ return;
         printf("\nStudent Not Found!\n");
 }
 
+
+// [KARAN YADAV UID-25LBCS3377]
+
+// ----------------------------
+// DISPLAY ALL STUDENTS
+// ----------------------------
+void displayStudents() {
+    printf("\n--- Student Records ---\n");
+
+    for (int i = 0; i < studentCount; i++) {
+        printf("\nID: %d\nName: %s\nRoom: %d\nMonths: %d\nLate Days: %d\nTotal Fee: %.2f\nFine: %.2f\nFinal Amount: %.2f\nPayment: %s\n",
+               students[i].id,
+               students[i].name,
+               students[i].allocatedRoom,
+               students[i].monthsStayed,
+               students[i].lateDays,
+               students[i].totalFee,
+               students[i].fine,
+               students[i].finalAmount,
+               students[i].paymentStatus);
+    }
+}
+
+// ----------------------------
+// SAVE TO FILE
+// ----------------------------
+void saveToFile() {
+    FILE *fp = fopen("hostel_data.txt", "w");
+    if (!fp) {
+        printf("Error Saving File!\n");
+        return;
+    }
+
+    fwrite(&roomCount, sizeof(int), 1, fp);
+    fwrite(&rooms, sizeof(Room), roomCount, fp);
+
+    fwrite(&studentCount, sizeof(int), 1, fp);
+    fwrite(&students, sizeof(Student), studentCount, fp);
+
+    fclose(fp);
+    printf("\nData Saved Successfully!\n");
+}
+
+// ----------------------------
+// LOAD FROM FILE
+// ----------------------------
+void loadFromFile() {
+    FILE *fp = fopen("hostel_data.txt", "r");
+    if (!fp) return;
+
+    fread(&roomCount, sizeof(int), 1, fp);
+    fread(&rooms, sizeof(Room), roomCount, fp);
+
+    fread(&studentCount, sizeof(int), 1, fp);
+    fread(&students, sizeof(Student), studentCount, fp);
+
+    fclose(fp);
+}
+
+// ----------------------------
+// MAIN MENU
+// ----------------------------
+int main() {
+    loadFromFile();
+
+    int choice;
+    while (1) {
+        printf("\n========== HOSTEL MANAGEMENT SYSTEM ==========\n");
+        printf("1. Add Room\n2. Add Student\n3. Allocate Room\n4. Calculate Fee\n5. Display Students\n6. Save & Exit\n");
+        printf("Enter choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1: addRoom(); break;
+            case 2: addStudent(); break;
+            case 3: allocateRoom(); break;
+            case 4: calculateFees(); break;
+            case 5: displayStudents(); break;
+            case 6: saveToFile(); return 0;
+            default: printf("\nInvalid Choice\n");
+        }
+    }
+}
